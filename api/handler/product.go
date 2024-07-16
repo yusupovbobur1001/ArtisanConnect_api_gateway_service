@@ -12,6 +12,17 @@ import (
 	"github.com/google/uuid"
 )
 
+
+// @Summary Create a product
+// @Description Create a new product
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param product body pb.CreateProductRequest true "Product Create Info"
+// @Success 201 {object} pb.ProductResponse
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /products [post]
 func (h *Handler) CreateProduct(c *gin.Context) {
 	p := pb.CreateProductRequest{}
 
@@ -38,6 +49,18 @@ func (h *Handler) CreateProduct(c *gin.Context) {
 
 }
 
+// UpdateProduct godoc
+// @Summary Update a product
+// @Description Update product information by ID
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param id path string true "Product ID"
+// @Param product body pb.UpdateProductRequest true "Product update data"
+// @Success 200 {object} pb.UpdateProductResponse
+// @Failure 400 {object} gin.H{"error": string, "message": string}
+// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Router /products/{id} [put]
 func (h *Handler) UpdateProduct(c *gin.Context) {
 	id := c.Param("id")
 
@@ -75,6 +98,18 @@ func (h *Handler) UpdateProduct(c *gin.Context) {
 
 }
 
+
+// DeleteProduct godoc
+// @Summary Delete a product
+// @Description Delete a product by ID
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param id path string true "Product ID"
+// @Success 200 {object} pb.DeleteProductResponse
+// @Failure 400 {object} gin.H{"error": string, "message": string}
+// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Router /products/{id} [delete]
 func (h *Handler) DeleteProduct(c *gin.Context) {
 	id := c.Param("id")
 
@@ -103,6 +138,20 @@ func (h *Handler) DeleteProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
+
+// ListProducts godoc
+// @Summary List products
+// @Description Get a paginated list of products
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param page query int true "Page number"
+// @Param limit query int true "Number of items per page"
+// @Success 200 {object} pb.ListProductsResponse
+// @Failure 400 {object} gin.H{"error": string}
+// @Failure 502 {object} gin.H{"error": string}
+// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Router /products [get]
 func (h *Handler) ListProducts(c *gin.Context) {
 	p := c.Query("page")
 
@@ -142,6 +191,17 @@ func (h *Handler) ListProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
+// GetProduct godoc
+// @Summary Get a product
+// @Description Get a product by ID
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param id path string true "Product ID"
+// @Success 200 {object} pb.GetProductResponse
+// @Failure 400 {object} gin.H{"error": string, "message": string}
+// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Router /products/{id} [get]
 func (h *Handler) GetProduct(c *gin.Context) {
 	id := c.Param("id")
 
@@ -171,6 +231,23 @@ func (h *Handler) GetProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
+
+// SearchProducts godoc
+// @Summary Search products
+// @Description Search products by query and price range with pagination
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param page query int true "Page number"
+// @Param limit query int true "Number of items per page"
+// @Param query query string false "Search query"
+// @Param min_price query float false "Minimum price"
+// @Param max_price query float false "Maximum price"
+// @Success 200 {object} pb.SearchProductsResponse
+// @Failure 400 {object} gin.H{"error": string}
+// @Failure 502 {object} gin.H{"error": string}
+// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Router /products/search [get]
 func (h *Handler) SearchProducts(c *gin.Context) {
 	p := c.Query("page")
 
@@ -242,6 +319,18 @@ func (h *Handler) SearchProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
+// AddProductRating godoc
+// @Summary Add product rating
+// @Description Add a rating for a product by product ID
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param product_id path string true "Product ID"
+// @Param rating body pb.AddProductRatingRequest true "Product rating data"
+// @Success 200 {object} pb.AddProductRatingResponse
+// @Failure 400 {object} gin.H{"error": string, "message": string}
+// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Router /products/rating/{product_id} [post]
 func (h *Handler) AddProductRating(c *gin.Context) {
 	id := c.Param("product_id")
 
@@ -281,6 +370,18 @@ func (h *Handler) AddProductRating(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
+
+// GetProductRatings godoc
+// @Summary Get product ratings
+// @Description Get ratings for a product by product ID
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param product_id path string true "Product ID"
+// @Success 200 {object} pb.GetProductRatingsResponse
+// @Failure 400 {object} gin.H{"error": string, "message": string}
+// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Router /products/ratings/{product_id} [get]
 func (h *Handler) GetProductRatings(c *gin.Context) {
 	id := c.Param("product_id")
 
