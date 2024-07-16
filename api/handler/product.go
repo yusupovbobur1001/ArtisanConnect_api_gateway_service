@@ -104,7 +104,7 @@ func (h *Handler) DeleteProduct(c *gin.Context) {
 }
 
 func (h *Handler) ListProducts(c *gin.Context) {
-	p := c.Param("page")
+	p := c.Query("page")
 
 	page, err := strconv.Atoi(p)
 	if err != nil {
@@ -114,7 +114,7 @@ func (h *Handler) ListProducts(c *gin.Context) {
 		return
 	}
 
-	l := c.Param("limit")
+	l := c.Query("limit")
 
 	limit, err := strconv.Atoi(l)
 	if err != nil {
@@ -172,7 +172,139 @@ func (h *Handler) GetProduct(c *gin.Context) {
 }
 
 func (h *Handler) SearchProducts(c *gin.Context) {
+	p := c.Query("page")
 
-	
+	page, err := strconv.Atoi(p)
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{
+			"error": "gape invalid",
+		})
+		return
+	}
 
+	l := c.Query("limit")
+
+	limit, err := strconv.Atoi(l)
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{
+			"error": "limit invalid",
+		})
+		return
+	}
+
+	q := c.Query("query")
+
+	minp := c.Query("min_price")
+
+	minPrice, err := strconv.ParseFloat(minp, 32)
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{
+			"error": "min_price invalid",
+		})
+		return
+	}
+
+	maxp := c.Query("max_price")
+
+	maxPrice, err := strconv.ParseFloat(maxp, 32)
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{
+			"error": "max_price invalid",
+		})
+		return
+	}
+
+	if maxPrice < minPrice {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "min price katta max price dan",
+		})
+		return
+	}
+
+	p1 := pb.SearchProductsRequest{
+		Page:     int32(page),
+		Limit:    int32(limit),
+		MinPrice: float32(maxPrice),
+		MaxPrice: float32(minPrice),
+		Query:    q,
+	}
+
+	resp, err := h.ClientProduct.SearchProducts(c, &p1)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{
+			"Error":   err.Error(),
+			"Message": "Error while SearchProducts invitation",
+		})
+		log.Println("Error while SearchProducts invitation ", err)
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+func (h *Handler) AddProductRating(c *gin.Context) {
+	id := c.Param("product_id")
+
+	_, err := uuid.Parse(id)
+	if err != nil {
+		h.Logger.Info("Error id invalid", "err: ", err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "StatusBadRequest",
+			"message": fmt.Sprintf("Error with getting Id from URL: %s", err.Error()),
+		})
+		return
+	}
+
+	p := pb.AddProductRatingRequest{}
+
+	err = json.NewDecoder(c.Request.Body).Decode(&p)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "StatusBadRequest",
+			"message": fmt.Sprintf("Error NewDecoder or Decoder: %s", err.Error()),
+		})
+		return
+	}
+
+	p.ProductId = id
+
+	resp, err := h.ClientProduct.AddProductRating(c, &p)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{
+			"Error":   err.Error(),
+			"Message": "Error while AddProductRating invitation",
+		})
+		log.Println("Error while AddProductRating invitation ", err)
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+func (h *Handler) GetProductRatings(c *gin.Context) {
+	id := c.Param("product_id")
+
+	_, err := uuid.Parse(id)
+	if err != nil {
+		h.Logger.Info("Error id invalid", "err: ", err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "StatusBadRequest",
+			"message": fmt.Sprintf("Error with getting Id from URL: %s", err.Error()),
+		})
+		return
+	}
+
+	p := pb.Id{ProductId: id}
+
+	resp, err := h.ClientProduct.GetProductRatings(c, &p)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{
+			"Error":   err.Error(),
+			"Message": "Error while AddProductRating invitation",
+		})
+		log.Println("Error while AddProductRating invitation ", err)
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
 }

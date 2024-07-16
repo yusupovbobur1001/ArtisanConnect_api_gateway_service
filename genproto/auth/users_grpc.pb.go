@@ -28,7 +28,6 @@ type AuthClient interface {
 	GetAllProfil(ctx context.Context, in *Filter, opts ...grpc.CallOption) (*UsersInfo, error)
 	ProfileUserType(ctx context.Context, in *UserType, opts ...grpc.CallOption) (*GetProfile, error)
 	UpdateProfilePassword(ctx context.Context, in *RestoreProfile, opts ...grpc.CallOption) (*Message, error)
-	RefreshToken(ctx context.Context, in *Refreshtoken, opts ...grpc.CallOption) (*Tokens, error)
 	ValidateUserId(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Exists, error)
 }
 
@@ -94,15 +93,6 @@ func (c *authClient) UpdateProfilePassword(ctx context.Context, in *RestoreProfi
 	return out, nil
 }
 
-func (c *authClient) RefreshToken(ctx context.Context, in *Refreshtoken, opts ...grpc.CallOption) (*Tokens, error) {
-	out := new(Tokens)
-	err := c.cc.Invoke(ctx, "/auth.Auth/RefreshToken", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *authClient) ValidateUserId(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Exists, error) {
 	out := new(Exists)
 	err := c.cc.Invoke(ctx, "/auth.Auth/ValidateUserId", in, out, opts...)
@@ -122,7 +112,6 @@ type AuthServer interface {
 	GetAllProfil(context.Context, *Filter) (*UsersInfo, error)
 	ProfileUserType(context.Context, *UserType) (*GetProfile, error)
 	UpdateProfilePassword(context.Context, *RestoreProfile) (*Message, error)
-	RefreshToken(context.Context, *Refreshtoken) (*Tokens, error)
 	ValidateUserId(context.Context, *Id) (*Exists, error)
 	mustEmbedUnimplementedAuthServer()
 }
@@ -148,9 +137,6 @@ func (UnimplementedAuthServer) ProfileUserType(context.Context, *UserType) (*Get
 }
 func (UnimplementedAuthServer) UpdateProfilePassword(context.Context, *RestoreProfile) (*Message, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProfilePassword not implemented")
-}
-func (UnimplementedAuthServer) RefreshToken(context.Context, *Refreshtoken) (*Tokens, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
 func (UnimplementedAuthServer) ValidateUserId(context.Context, *Id) (*Exists, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidateUserId not implemented")
@@ -276,24 +262,6 @@ func _Auth_UpdateProfilePassword_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Refreshtoken)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServer).RefreshToken(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/auth.Auth/RefreshToken",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).RefreshToken(ctx, req.(*Refreshtoken))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Auth_ValidateUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Id)
 	if err := dec(in); err != nil {
@@ -342,10 +310,6 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateProfilePassword",
 			Handler:    _Auth_UpdateProfilePassword_Handler,
-		},
-		{
-			MethodName: "RefreshToken",
-			Handler:    _Auth_RefreshToken_Handler,
 		},
 		{
 			MethodName: "ValidateUserId",

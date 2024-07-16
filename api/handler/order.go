@@ -158,7 +158,7 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 // @Failure 500 {object} gin.H
 // @Router /orders/{page}/{limit} [get]
 func (h *Handler) ListOrders(c *gin.Context) {
-	p := c.Param("page")
+	p := c.Query("page")
 
 	page, err := strconv.Atoi(p)
 	if err != nil {
@@ -169,7 +169,7 @@ func (h *Handler) ListOrders(c *gin.Context) {
 		return
 	}
 
-	l := c.Param("limit")
+	l := c.Query("limit")
 
 	limit, err := strconv.Atoi(l)
 	if err != nil {
@@ -262,7 +262,6 @@ func (h *Handler) PayOrder(c *gin.Context) {
 		})
 		return
 	}
-
 	order := pb.PayOrderRequest{}
 
 	err = json.NewDecoder(c.Request.Body).Decode(&order)
