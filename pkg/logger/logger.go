@@ -25,7 +25,7 @@ func New() (*slog.Logger, error) {
 		Level: slog.LevelDebug,
 	}
 
-	file, err := os.OpenFile("app.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
+	file, err := os.OpenFile("api.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
 		return nil, err
 	}

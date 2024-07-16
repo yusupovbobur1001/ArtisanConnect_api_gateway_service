@@ -3,9 +3,8 @@ package pkg
 import (
 	"api_service/config"
 	pbuAuthservice "api_service/genproto/auth"
-	pbuOrderservice "api_service/genproto/proto"
+	pbuOrderservice "api_service/genproto/order"
 	pbuProduct "api_service/genproto/product"
-
 
 	"log"
 
@@ -23,20 +22,22 @@ func NewAuthenticationClient(cfg *config.Config) pbuAuthservice.AuthClient {
 	return pbuAuthservice.NewAuthClient(conn)
 }
 
-func NewOrderClient(cfg *config.Config) pbuProduct. {
-	conn, err := grpc.NewClient("localhost"+cfg.RESERVATION_SERVICE,
+func NewPtoductClient(cfg *config.Config) pbuProduct.ProductServiceClient {
+	conn, err := grpc.NewClient("localhost"+cfg.PRODUCT_SERVICE_PROT,
+		grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Println("erro while connecting product service ", err)
+	}
+
+	return pbuProduct.NewProductServiceClient(conn)
+}
+
+func NewOrderClient(cfg *config.Config) pbuOrderservice.OrderServiceClient {
+	conn, err := grpc.NewClient("localhost"+cfg.PRODUCT_SERVICE_PROT,
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Println("erro while connecting order service ", err)
 	}
 
-	return pbuProduct.NewOrderServiceClient(conn)
+	return pbuOrderservice.NewOrderServiceClient(conn)
 }
-
-
-
-
-
-
-
-

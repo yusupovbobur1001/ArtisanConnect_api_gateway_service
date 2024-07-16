@@ -12,8 +12,7 @@ import (
 type Config struct {
 	HTTP_PORT             string
 	AUTH_SERVICE_PORT     string
-	PRODUCT_SERVICE       string
-	PAYMENTS_SERVICE_PORT string
+	PRODUCT_SERVICE_PROT  string
 	SIGNING_KEY           string
 }
 
@@ -27,9 +26,7 @@ func Load() *Config {
 
 	cfg.HTTP_PORT = cast.ToString(coalesce("HTTP_PORT", ":8888"))
 	cfg.AUTH_SERVICE_PORT = cast.ToString(coalesce("AUTH_SERVICE_PORT", ":7777"))
-	cfg.RESERVATION_SERVICE = cast.ToString(coalesce("RESERVATION_SERVICE", ":9999"))
-	cfg.PAYMENTS_SERVICE_PORT = cast.ToString(coalesce("PAYMENTS_SERVICE_PORT", "GARD"))
-
+	cfg.PRODUCT_SERVICE_PROT = cast.ToString(coalesce("PRODUCT_SERVICE_PROT", ":8080"))
 	return &cfg
 }
 
