@@ -1,7 +1,7 @@
 package handler
 
 import (
-	pb "api_service/genproto/product"
+	pb "api_service/genproto/products"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -18,10 +18,11 @@ import (
 // @Tags products
 // @Accept json
 // @Produce json
-// @Param product body pb.CreateProductRequest true "Product Create Info"
-// @Success 201 {object} pb.ProductResponse
-// @Failure 400 {object} gin.H
-// @Failure 500 {object} gin.H
+// @Security ApiKeyAuth
+// @Param product body products.CreateProductRequest true "Product Create Info"
+// @Success 201 {object} products.ProductInfo
+// @Failure 400 {object} string
+// @Failure 500 {object} string
 // @Router /products [post]
 func (h *Handler) CreateProduct(c *gin.Context) {
 	p := pb.CreateProductRequest{}
@@ -55,11 +56,12 @@ func (h *Handler) CreateProduct(c *gin.Context) {
 // @Tags products
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Param id path string true "Product ID"
-// @Param product body pb.UpdateProductRequest true "Product update data"
-// @Success 200 {object} pb.UpdateProductResponse
-// @Failure 400 {object} gin.H{"error": string, "message": string}
-// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Param product body products.UpdateProductRequest true "Product update data"
+// @Success 200 {object} products.ProductInfo
+// @Failure 400 {object} string
+// @Failure 500 {object} string
 // @Router /products/{id} [put]
 func (h *Handler) UpdateProduct(c *gin.Context) {
 	id := c.Param("id")
@@ -105,10 +107,11 @@ func (h *Handler) UpdateProduct(c *gin.Context) {
 // @Tags products
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Param id path string true "Product ID"
-// @Success 200 {object} pb.DeleteProductResponse
-// @Failure 400 {object} gin.H{"error": string, "message": string}
-// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Success 200 {object} products.DeleteProductResponse
+// @Failure 400 {object} string
+// @Failure 500 {object} string
 // @Router /products/{id} [delete]
 func (h *Handler) DeleteProduct(c *gin.Context) {
 	id := c.Param("id")
@@ -145,13 +148,14 @@ func (h *Handler) DeleteProduct(c *gin.Context) {
 // @Tags products
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Param page query int true "Page number"
 // @Param limit query int true "Number of items per page"
-// @Success 200 {object} pb.ListProductsResponse
-// @Failure 400 {object} gin.H{"error": string}
-// @Failure 502 {object} gin.H{"error": string}
-// @Failure 500 {object} gin.H{"error": string, "message": string}
-// @Router /products [get]
+// @Success 200 {object} products.ListProductsResponse
+// @Failure 400 {object} string
+// @Failure 502 {object} string
+// @Failure 500 {object} string
+// @Router /profiles/aa [get]
 func (h *Handler) ListProducts(c *gin.Context) {
 	p := c.Query("page")
 
@@ -197,11 +201,12 @@ func (h *Handler) ListProducts(c *gin.Context) {
 // @Tags products
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Param id path string true "Product ID"
-// @Success 200 {object} pb.GetProductResponse
-// @Failure 400 {object} gin.H{"error": string, "message": string}
-// @Failure 500 {object} gin.H{"error": string, "message": string}
-// @Router /products/{id} [get]
+// @Success 200 {object} products.ProductInfo
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /profiles/{id} [get]
 func (h *Handler) GetProduct(c *gin.Context) {
 	id := c.Param("id")
 
@@ -238,16 +243,17 @@ func (h *Handler) GetProduct(c *gin.Context) {
 // @Tags products
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param page query int true "Page number"
 // @Param limit query int true "Number of items per page"
 // @Param query query string false "Search query"
-// @Param min_price query float false "Minimum price"
-// @Param max_price query float false "Maximum price"
-// @Success 200 {object} pb.SearchProductsResponse
-// @Failure 400 {object} gin.H{"error": string}
-// @Failure 502 {object} gin.H{"error": string}
-// @Failure 500 {object} gin.H{"error": string, "message": string}
-// @Router /products/search [get]
+// @Param min_price query string false "Minimum price"
+// @Param max_price query string false "Maximum price"
+// @Success 200 {object} products.SearchProductsResponse
+// @Failure 400 {object} string
+// @Failure 502 {object} string
+// @Failure 500 {object} string
+// @Router /profiles/search [get]
 func (h *Handler) SearchProducts(c *gin.Context) {
 	p := c.Query("page")
 
@@ -325,12 +331,13 @@ func (h *Handler) SearchProducts(c *gin.Context) {
 // @Tags products
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param product_id path string true "Product ID"
-// @Param rating body pb.AddProductRatingRequest true "Product rating data"
-// @Success 200 {object} pb.AddProductRatingResponse
-// @Failure 400 {object} gin.H{"error": string, "message": string}
-// @Failure 500 {object} gin.H{"error": string, "message": string}
-// @Router /products/rating/{product_id} [post]
+// @Param rating body products.AddProductRatingRequest true "Product rating data"
+// @Success 200 {object} products.RatingInfo
+// @Failure 400 {object}  string
+// @Failure 500 {object}  string
+// @Router /profiles/rating/{product_id} [post]
 func (h *Handler) AddProductRating(c *gin.Context) {
 	id := c.Param("product_id")
 
@@ -377,11 +384,12 @@ func (h *Handler) AddProductRating(c *gin.Context) {
 // @Tags products
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param product_id path string true "Product ID"
-// @Success 200 {object} pb.GetProductRatingsResponse
-// @Failure 400 {object} gin.H{"error": string, "message": string}
-// @Failure 500 {object} gin.H{"error": string, "message": string}
-// @Router /products/ratings/{product_id} [get]
+// @Success 200 {object} products.GetProductRatingsResponse
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /profiles/ratings/{product_id} [get]
 func (h *Handler) GetProductRatings(c *gin.Context) {
 	id := c.Param("product_id")
 

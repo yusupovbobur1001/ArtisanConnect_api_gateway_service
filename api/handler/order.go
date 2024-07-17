@@ -1,7 +1,7 @@
 package handler
 
 import (
-	pb "api_service/genproto/order"
+	pb "api_service/genproto/orders"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -19,10 +19,11 @@ import (
 // @Accept json
 // @Produce json
 // @Param id path string true "Order ID"
-// @Param order body pb.UpdateOrderStatusRequest true "Order Update Info"
-// @Success 200 {object} pb.OrderResponse
-// @Failure 400 {object} gin.H
-// @Failure 500 {object} gin.H
+// @Security ApiKeyAuth
+// @Param order body orders.UpdateOrderStatusRequest true "Order Update Info"
+// @Success 200 {object} orders.UpdateOrderRespons
+// @Failure 400 {object} string
+// @Failure 500 {object} string
 // @Router /orders/{id} [put]
 func (h *Handler) UpdateOrder(c *gin.Context) {
 	id := c.Param("id")
@@ -77,9 +78,10 @@ func (h *Handler) UpdateOrder(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "Order ID"
-// @Success 200 {object} pb.OrderResponse
-// @Failure 400 {object} gin.H
-// @Failure 500 {object} gin.H
+// @Security ApiKeyAuth
+// @Success 200 {object} orders.CancelOrder1
+// @Failure 400 {object} string
+// @Failure 500 {object} string
 // @Router /orders/{id} [delete]
 func (h *Handler) DeleteOrder(c *gin.Context) {
 	id := c.Param("id")
@@ -115,10 +117,11 @@ func (h *Handler) DeleteOrder(c *gin.Context) {
 // @Tags orders
 // @Accept json
 // @Produce json
-// @Param order body pb.CreateOrderRequest true "Order Create Info"
-// @Success 201 {object} pb.OrderResponse
-// @Failure 400 {object} gin.H
-// @Failure 500 {object} gin.H
+// @Security ApiKeyAuth
+// @Param order body orders.CreateOrderRequest true "Order Create Info"
+// @Success 201 {object} orders.OrderInfo
+// @Failure 400 {object} string
+// @Failure 500 {object} string
 // @Router /orders [post]
 func (h *Handler) CreateOrder(c *gin.Context) {
 	order := pb.CreateOrderRequest{}
@@ -151,11 +154,12 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 // @Tags orders
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Param page path int true "Page number"
 // @Param limit path int true "Limit number"
-// @Success 200 {object} pb.ListOrdersResponse
-// @Failure 400 {object} gin.H
-// @Failure 500 {object} gin.H
+// @Success 200 {object} orders.ListOrdersResponse
+// @Failure 400 {object} string
+// @Failure 500 {object} string
 // @Router /orders/{page}/{limit} [get]
 func (h *Handler) ListOrders(c *gin.Context) {
 	p := c.Query("page")
@@ -203,10 +207,11 @@ func (h *Handler) ListOrders(c *gin.Context) {
 // @Tags orders
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Param id path string true "Order ID"
-// @Success 200 {object} pb.OrderResponse
-// @Failure 400 {object} gin.H
-// @Failure 500 {object} gin.H
+// @Success 200 {object} orders.OrderInfo
+// @Failure 400 {object} string
+// @Failure 500 {object} string
 // @Router /orders/{id} [get]
 func (h *Handler) GetOrder(c *gin.Context) {
 	id := c.Param("id")
@@ -244,12 +249,13 @@ func (h *Handler) GetOrder(c *gin.Context) {
 // @Tags orders
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Param order_id path string true "Order ID"
-// @Param order body pb.PayOrderRequest true "Payment Info"
-// @Success 200 {object} pb.OrderResponse
-// @Failure 400 {object} gin.H
-// @Failure 500 {object} gin.H
-// @Router /orders/pay/{order_id} [post]
+// @Param order body orders.PayOrderRequest true "Payment Info"
+// @Success 200 {object} orders.PaymentInfo
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /orders/{order_id} [post]
 func (h *Handler) PayOrder(c *gin.Context) {
 	id := c.Param("order_id")
 
@@ -311,11 +317,12 @@ func (h *Handler) PayOrder(c *gin.Context) {
 // @Tags orders
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Param order_id path string true "Order ID"
-// @Success 200 {object} pb.PaymentStatusResponse
-// @Failure 400 {object} gin.H
-// @Failure 500 {object} gin.H
-// @Router /orders/payment/status/{order_id} [get]
+// @Success 200 {object} orders.PaymentInfo
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /orders/status/{order_id} [get]
 func (h *Handler) GetPaymentStatus(c *gin.Context) {
 	id := c.Param("order_id")
 

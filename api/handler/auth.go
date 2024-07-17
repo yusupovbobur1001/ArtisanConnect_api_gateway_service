@@ -18,11 +18,12 @@ import (
 // @Tags users
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Param id path string true "User ID"
-// @Param updateBody body pb.UserUpdate true "User update data"
-// @Success 200 {object} pb.UpdateProfileResponse
-// @Failure 400 {object} gin.H{"error": string, "message": string}
-// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Param updateBody body auth.UserUpdate true "User update data"
+// @Success 200 {object} auth.UserUpdate
+// @Failure 400 {object} string
+// @Failure 500 {object} string
 // @Router /profiles/{id} [put]
 func (h *Handler) UpdateProfile(c *gin.Context) {
 	id := c.Param("id")
@@ -63,17 +64,17 @@ func (h *Handler) UpdateProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
-
 // DeleteProfile godoc
 // @Summary Delete user profile
 // @Description Delete user profile by user ID
 // @Tags users
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Param id path string true "User ID"
-// @Success 200 {object} pb.DeleteProfileResponse
-// @Failure 400 {object} gin.H{"error": string, "message": string}
-// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Success 200 {object} auth.Message
+// @Failure 400 {object} string
+// @Failure 500 {object} string
 // @Router /profiles/{id} [delete]
 func (h *Handler) DeleteProfile(c *gin.Context) {
 	id := c.Param("id")
@@ -103,17 +104,17 @@ func (h *Handler) DeleteProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
-
 // GetByIdProfile godoc
 // @Summary Get user profile by ID
 // @Description Retrieve user profile information by user ID
 // @Tags users
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Param id path string true "User ID"
-// @Success 200 {object} pb.GetByIdProfileResponse
-// @Failure 400 {object} gin.H{"error": string, "message": string}
-// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Success 200 {object} auth.GetProfile
+// @Failure 400 {object} string
+// @Failure 500 {object} string
 // @Router /profiles/{id} [get]
 func (h *Handler) GetByIdProfile(c *gin.Context) {
 	id := c.Param("id")
@@ -143,22 +144,21 @@ func (h *Handler) GetByIdProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
-
 // GetAllProfil godoc
 // @Summary Get all user profiles
 // @Description Retrieve all user profiles with pagination
 // @Tags users
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Param page query integer false "Page number"
 // @Param limit query integer false "Items per page"
-// @Success 200 {object} pb.GetAllProfilResponse
-// @Failure 400 {object} gin.H{"error": string}
-// @Failure 500 {object} gin.H{"error": string, "message": string}
+// @Success 200 {object} auth.Filter
+// @Failure 400 {object} string
+// @Failure 500 {object} string
 // @Router /profiles [get]
 func (h *Handler) GetAllProfil(c *gin.Context) {
 	p := c.Query("page")
-
 	page, err := strconv.Atoi(p)
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{
@@ -166,6 +166,7 @@ func (h *Handler) GetAllProfil(c *gin.Context) {
 		})
 		return
 	}
+	
 
 	l := c.Query("limit")
 
@@ -178,9 +179,10 @@ func (h *Handler) GetAllProfil(c *gin.Context) {
 	}
 
 	u := pb.Filter{
-		Page: int32(page),
+		Page:  int32(page),
 		Limit: int32(limit),
 	}
+	fmt.Println(page, limit)
 
 	resp, err := h.ClientAuthentication.GetAllProfil(c, &u)
 	if err != nil {
@@ -193,6 +195,5 @@ func (h *Handler) GetAllProfil(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, resp)
+
 }
-
-

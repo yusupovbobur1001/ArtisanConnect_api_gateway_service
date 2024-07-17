@@ -3,8 +3,8 @@ package pkg
 import (
 	"api_service/config"
 	pbuAuthservice "api_service/genproto/auth"
-	pbuOrderservice "api_service/genproto/order"
-	pbuProduct "api_service/genproto/product"
+	pbuOrderservice "api_service/genproto/orders"
+	pbuProduct "api_service/genproto/products"
 
 	"log"
 

@@ -3,8 +3,8 @@ package handler
 import (
 	"api_service/config"
 	pbuAuth "api_service/genproto/auth"
-	pbuOrders "api_service/genproto/order"
-	pbuProduct "api_service/genproto/product"
+	pbuOrders "api_service/genproto/orders"
+	pbuProduct "api_service/genproto/products"
 	"api_service/pkg"
 	"api_service/pkg/logger"
 	"log"

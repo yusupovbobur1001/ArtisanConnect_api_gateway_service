@@ -1,0 +1,931 @@
+basePath: /reservedesk.uz
+definitions:
+  auth.Filter:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+    type: object
+  auth.GetProfile:
+    properties:
+      bio:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: string
+      password:
+        type: string
+      updated_at:
+        type: string
+      user_name:
+        type: string
+    type: object
+  auth.Message:
+    properties:
+      message:
+        type: string
+    type: object
+  auth.UserUpdate:
+    properties:
+      bio:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: string
+      user_name:
+        type: string
+      user_type:
+        type: string
+    type: object
+  orders.Address:
+    properties:
+      city:
+        type: string
+      country:
+        type: string
+      street:
+        type: string
+      user_id:
+        type: string
+      zip_code:
+        type: string
+    type: object
+  orders.CancelOrder1:
+    properties:
+      id:
+        type: string
+      status:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  orders.CreateOrderRequest:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/orders.OrderItem'
+        type: array
+      shipping_address:
+        $ref: '#/definitions/orders.Address'
+    type: object
+  orders.ListOrdersResponse:
+    properties:
+      limit:
+        type: integer
+      orders:
+        items:
+          $ref: '#/definitions/orders.OrderInfo1'
+        type: array
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  orders.OrderInfo:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/orders.OrderItem'
+        type: array
+      shipping_address:
+        $ref: '#/definitions/orders.Address'
+      status:
+        type: string
+      total_amount:
+        type: number
+      user_id:
+        type: string
+    type: object
+  orders.OrderInfo1:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+      total_amount:
+        type: number
+      user_id:
+        type: string
+    type: object
+  orders.OrderItem:
+    properties:
+      price:
+        type: number
+      product_id:
+        type: string
+      quantity:
+        type: integer
+    type: object
+  orders.PayOrderRequest:
+    properties:
+      card_number:
+        type: string
+      cvv:
+        type: string
+      expiry_date:
+        type: string
+      order_id:
+        type: string
+      payment_method:
+        type: string
+    type: object
+  orders.PaymentInfo:
+    properties:
+      amount:
+        type: number
+      created_at:
+        type: string
+      order_id:
+        type: string
+      payment_id:
+        type: string
+      status:
+        type: string
+      transaction_id:
+        type: string
+    type: object
+  orders.UpdateOrderRespons:
+    properties:
+      order_id:
+        type: string
+      status:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  orders.UpdateOrderStatusRequest:
+    properties:
+      order_id:
+        type: string
+      status:
+        type: string
+    type: object
+  products.AddProductRatingRequest:
+    properties:
+      comment:
+        type: string
+      product_id:
+        type: string
+      rating:
+        type: number
+      user_id:
+        type: string
+    type: object
+  products.CreateProductRequest:
+    properties:
+      artisan_id:
+        type: string
+      category_id:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+    type: object
+  products.DeleteProductResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  products.GetProductRatingsResponse:
+    properties:
+      average_rating:
+        type: number
+      ratings:
+        items:
+          $ref: '#/definitions/products.RatingInfo'
+        type: array
+      total_ratings:
+        type: integer
+    type: object
+  products.ListProductsResponse:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+      products:
+        items:
+          $ref: '#/definitions/products.ProductInfo'
+        type: array
+      total:
+        type: integer
+    type: object
+  products.ProductInfo:
+    properties:
+      artisan_id:
+        type: string
+      category_id:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  products.RatingInfo:
+    properties:
+      comment:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      product_id:
+        type: string
+      rating:
+        type: number
+      user_id:
+        type: string
+    type: object
+  products.SearchProductsResponse:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+      products:
+        items:
+          $ref: '#/definitions/products.ProductInfo'
+        type: array
+      total:
+        type: integer
+    type: object
+  products.UpdateProductRequest:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      product_id:
+        type: string
+    type: object
+host: localhost:8888
+info:
+  contact: {}
+  description: ReserveDesk is program to book seats in restaurants order food before
+    arrival.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: ReserveDesk API
+  version: "1.0"
+paths:
+  /orders:
+    post:
+      consumes:
+      - application/json
+      description: Create a new order
+      parameters:
+      - description: Order Create Info
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/orders.CreateOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/orders.OrderInfo'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create an order
+      tags:
+      - orders
+  /orders/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Cancel an order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/orders.CancelOrder1'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete an order
+      tags:
+      - orders
+    get:
+      consumes:
+      - application/json
+      description: Get the details of an order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/orders.OrderInfo'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get an order
+      tags:
+      - orders
+    put:
+      consumes:
+      - application/json
+      description: Update the status of an order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Order Update Info
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/orders.UpdateOrderStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/orders.UpdateOrderRespons'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update an order
+      tags:
+      - orders
+  /orders/{order_id}:
+    post:
+      consumes:
+      - application/json
+      description: Make a payment for an order
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: string
+      - description: Payment Info
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/orders.PayOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/orders.PaymentInfo'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Pay for an order
+      tags:
+      - orders
+  /orders/{page}/{limit}:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of orders with pagination
+      parameters:
+      - description: Page number
+        in: path
+        name: page
+        required: true
+        type: integer
+      - description: Limit number
+        in: path
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/orders.ListOrdersResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: List orders
+      tags:
+      - orders
+  /orders/status/{order_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get the payment status of an order
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/orders.PaymentInfo'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get payment status
+      tags:
+      - orders
+  /products:
+    post:
+      consumes:
+      - application/json
+      description: Create a new product
+      parameters:
+      - description: Product Create Info
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/products.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/products.ProductInfo'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create a product
+      tags:
+      - products
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/products.DeleteProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a product
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      description: Update product information by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Product update data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/products.UpdateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/products.ProductInfo'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update a product
+      tags:
+      - products
+  /profiles:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all user profiles with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.Filter'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get all user profiles
+      tags:
+      - users
+  /profiles/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete user profile by user ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.Message'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete user profile
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Get a product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/products.ProductInfo'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get a product
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      description: Update user profile by user ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User update data
+        in: body
+        name: updateBody
+        required: true
+        schema:
+          $ref: '#/definitions/auth.UserUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.UserUpdate'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update user profile
+      tags:
+      - users
+  /profiles/aa:
+    get:
+      consumes:
+      - application/json
+      description: Get a paginated list of products
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/products.ListProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+        "502":
+          description: Bad Gateway
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: List products
+      tags:
+      - products
+  /profiles/rating/{product_id}:
+    post:
+      consumes:
+      - application/json
+      description: Add a rating for a product by product ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: string
+      - description: Product rating data
+        in: body
+        name: rating
+        required: true
+        schema:
+          $ref: '#/definitions/products.AddProductRatingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/products.RatingInfo'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Add product rating
+      tags:
+      - products
+  /profiles/ratings/{product_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get ratings for a product by product ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/products.GetProductRatingsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get product ratings
+      tags:
+      - products
+  /profiles/search:
+    get:
+      consumes:
+      - application/json
+      description: Search products by query and price range with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: Search query
+        in: query
+        name: query
+        type: string
+      - description: Minimum price
+        in: query
+        name: min_price
+        type: string
+      - description: Maximum price
+        in: query
+        name: max_price
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/products.SearchProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+        "502":
+          description: Bad Gateway
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Search products
+      tags:
+      - products
+security:
+- "":
+  - ApiKeyAuth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -1,15 +1,18 @@
 package middleware
 
 import (
-
 	"api_service/api/token"
+	"fmt"
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
 func JWTMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		auth := ctx.GetHeader("Authorization")
+
+		fmt.Println(auth)
 
 		if auth == "" {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
@@ -36,4 +39,3 @@ func JWTMiddleware() gin.HandlerFunc {
 		ctx.Next()
 	}
 }
-
