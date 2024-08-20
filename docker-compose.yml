@@ -1,0 +1,17 @@
+version: '3.9'
+
+
+services:
+  api-service:
+    build: .
+    container_name: api-service
+    ports:
+      - "8888:8888"
+    networks:
+      - app-networks
+
+networks:
+  app-networks:
+    name: app-networks
+    driver: bridge
+    external: true

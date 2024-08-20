@@ -25,7 +25,7 @@ func Load() *Config {
 	cfg := Config{}
 
 	cfg.HTTP_PORT = cast.ToString(coalesce("HTTP_PORT", ":8888"))
-	cfg.AUTH_SERVICE_PORT = cast.ToString(coalesce("AUTH_SERVICE_PORT", ":8080"))
+	cfg.AUTH_SERVICE_PORT = cast.ToString(coalesce("AUTH_SERVICE_PORT", ":7777"))
 	cfg.PRODUCT_SERVICE_PROT = cast.ToString(coalesce("PRODUCT_SERVICE_PROT", ":8070"))
 	cfg.SIGNING_KEY = cast.ToString(coalesce("SIGNING_KEY", "GaRD"))
 	return &cfg

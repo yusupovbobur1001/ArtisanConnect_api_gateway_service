@@ -13,7 +13,7 @@ import (
 )
 
 func NewAuthenticationClient(cfg *config.Config) pbuAuthservice.AuthClient {
-	conn, err := grpc.NewClient("localhost"+cfg.AUTH_SERVICE_PORT,
+	conn, err := grpc.NewClient("auth-service"+cfg.AUTH_SERVICE_PORT,
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Println("error while connecting authentication service ", err)
@@ -23,7 +23,7 @@ func NewAuthenticationClient(cfg *config.Config) pbuAuthservice.AuthClient {
 }
 
 func NewPtoductClient(cfg *config.Config) pbuProduct.ProductServiceClient {
-	conn, err := grpc.NewClient("localhost"+cfg.PRODUCT_SERVICE_PROT,
+	conn, err := grpc.NewClient("product-service"+cfg.PRODUCT_SERVICE_PROT,
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Println("erro while connecting product service ", err)
@@ -33,7 +33,7 @@ func NewPtoductClient(cfg *config.Config) pbuProduct.ProductServiceClient {
 }
 
 func NewOrderClient(cfg *config.Config) pbuOrderservice.OrderServiceClient {
-	conn, err := grpc.NewClient("localhost"+cfg.PRODUCT_SERVICE_PROT,
+	conn, err := grpc.NewClient("product-service"+cfg.PRODUCT_SERVICE_PROT,
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Println("erro while connecting order service ", err)

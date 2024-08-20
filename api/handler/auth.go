@@ -57,7 +57,7 @@ func (h *Handler) UpdateProfile(c *gin.Context) {
 			"Error":   err.Error(),
 			"Message": "Error while UpdateProfile invitation",
 		})
-		log.Println("Error while UpdateProfile invitation ", err)
+		log.Println("Error wdhile UpdateProfile invitation ", err)
 		return
 	}
 
